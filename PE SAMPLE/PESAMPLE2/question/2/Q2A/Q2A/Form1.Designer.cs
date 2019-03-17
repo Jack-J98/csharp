@@ -85,6 +85,7 @@
             this.cbbClass.Name = "cbbClass";
             this.cbbClass.Size = new System.Drawing.Size(250, 21);
             this.cbbClass.TabIndex = 5;
+            this.cbbClass.SelectedIndexChanged += new System.EventHandler(this.cbbClass_SelectedIndexChanged);
             // 
             // btnAdd
             // 
@@ -94,6 +95,7 @@
             this.btnAdd.TabIndex = 6;
             this.btnAdd.Text = "Add";
             this.btnAdd.UseVisualStyleBackColor = true;
+            this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
             // 
             // Form1
             // 
@@ -109,6 +111,7 @@
             this.Controls.Add(this.lbName);
             this.Name = "Form1";
             this.Text = "Add a new ship";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
