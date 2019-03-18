@@ -29,7 +29,7 @@ namespace Q2A
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            dataProvinder.combobox("select class from Classes", cbbClass);
+            dataProvinder.COMBOBOX("select class from Classes", cbbClass);
         }
 
         private void btnAdd_Click(object sender, EventArgs e)
@@ -42,7 +42,7 @@ namespace Q2A
             }
             else if (!string.IsNullOrEmpty(tbName.Text))
             {
-                ArrayList listName = dataProvinder.getListString("select name from Ships");
+                ArrayList listName = dataProvinder.LIST_STRING("select name from Ships");
                 // check name duplicate
                 foreach (string name in listName)
                 {
@@ -62,7 +62,7 @@ namespace Q2A
             else
             {
                 string query = "INSERT INTO Ships VALUES( @param1 , @param2 , @param3 )";
-                dataProvinder.ADD(query, new object[] { tbName.Text, cbbClass.Text, tbLaunched.Text });
+                dataProvinder.ADD_UPDATE_DELETE(query, new object[] { tbName.Text, cbbClass.Text, tbLaunched.Text });
                 MessageBox.Show("A new ship is added!", "Inform", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 

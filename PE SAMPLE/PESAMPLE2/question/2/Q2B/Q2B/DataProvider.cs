@@ -1,7 +1,4 @@
-#### Provider
-
-```c#
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
@@ -11,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace THAYCACAC
+namespace Q2B
 {
     class DataProvider
     {
@@ -211,4 +208,3 @@ namespace THAYCACAC
         }
     }
 }
-```
