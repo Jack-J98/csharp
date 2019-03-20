@@ -128,6 +128,51 @@ namespace Q3
         }
 
         /**
+         * Get object
+         * Example: DataTable dataTable = dataProvider.GET_OBJECT( "select * from Ships where name like @param1", new object[] { "%abc%" });
+         */
+        public DataRow GET_OBJECT(string query, object[] parameter = null)
+        {
+            SqlConnection con = null;
+            SqlCommand cmd = null;
+            DataTable dataTable = new DataTable();
+            try
+            {
+                con = new SqlConnection(connStr);
+                con.Open();
+                cmd = new SqlCommand(query, con);
+                if (parameter != null)
+                {
+                    string[] listParam = query.Split(' ');
+                    int i = 0;
+                    foreach (string item in listParam)
+                    {
+                        if (item.Contains('@'))
+                        {
+                            cmd.Parameters.AddWithValue(item, parameter[i]);
+                            i++;
+                        }
+                    }
+                }
+                SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                adapter.Fill(dataTable);
+                if (dataTable.Rows.Count > 0)
+                {
+                    return dataTable.Rows[0];
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                con.Close();
+            }
+        }
+
+        /**
          * Fill data to table
          * Example: dataProvider.GRIDVIEW("select * from Student where class = @param1", GridView1, new object[] { "SE1212" });
          */

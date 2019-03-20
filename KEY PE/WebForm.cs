@@ -21,3 +21,17 @@ TextBox1.Text = Request.QueryString["rollno"].ToString();
 TextBox2.Text = Request.QueryString["sname"].ToString();
 TextBox3.Text = Request.QueryString["fname"].ToString();
 TextBox4.Text = Request.QueryString["mname"].ToString();
+
+/**
+ * Select row
+ */
+
+  GridView1.RowCommand += GridView1_RowCommand;
+
+  private void GridView1_RowCommand(object sender, GridViewCommandEventArgs e)
+{
+    if (e.CommandName.Equals("Select"))
+    {
+        tbProjectName.Text = e.CommandArgument.ToString();
+    }
+}

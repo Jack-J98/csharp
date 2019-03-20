@@ -25,10 +25,12 @@
         <asp:GridView ID="GridView1" runat="server" CellPadding="4" EnableModelValidation="True" ForeColor="#333333" GridLines="None" OnRowDeleted="GridView1_RowDeleted" OnRowDeleting="GridView1_RowDeleting">
             <AlternatingRowStyle BackColor="White" />
             <Columns>
-                <asp:CommandField ShowSelectButton="True" />
+                <asp:TemplateField ShowHeader="False">
+                    <ItemTemplate>
+                        <asp:LinkButton ID="LinkButton1" runat="server" CausesValidation="False" CommandName="Select" CommandArgument='<%# Eval("id") %>' Text='Select'></asp:LinkButton>
+                    </ItemTemplate>
+                </asp:TemplateField>
                 <asp:CheckBoxField />
-                <asp:CommandField ShowDeleteButton="True" />
-                <asp:CommandField ShowEditButton="True" />
             </Columns>
             <FooterStyle BackColor="#990000" Font-Bold="True" ForeColor="White" />
             <HeaderStyle BackColor="#990000" Font-Bold="True" ForeColor="White" />
@@ -70,7 +72,7 @@
                     <asp:Label ID="Label4" runat="server" Text="Is FullTime"></asp:Label>
                 </td>
                 <td>
-                    <asp:CheckBox ID="cbFullTime" runat="server" />
+                    <asp:CheckBox ID="cbFullTime" runat="server" Text="Yes" />
                 </td>
                 <td>&nbsp;</td>
             </tr>
@@ -85,7 +87,7 @@
             </tr>
             <tr>
                 <td class="auto-style2">
-                    <asp:Button ID="btnSave" runat="server" Text="Save" />
+                    <asp:Button ID="btnSave" runat="server" Text="Save" OnClick="btnSave_Click" />
                 </td>
                 <td>&nbsp;</td>
                 <td>&nbsp;</td>
