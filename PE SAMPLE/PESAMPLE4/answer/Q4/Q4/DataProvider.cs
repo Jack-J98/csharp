@@ -1,24 +1,23 @@
-using System;
+﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Text;
-using System.Windows.Forms;
+using System.Web.Configuration;
+using System.Web.UI.WebControls;
 
-namespace THAYCACAC
+namespace Q4
 {
     class DataProvider
     {
         public DataProvider() { }
-        string connStr = System.Configuration.ConfigurationManager.ConnectionStrings["Database"].ConnectionString;
+        string connStr = WebConfigurationManager.ConnectionStrings["Database"].ConnectionString;
 
         /**
-         * Get list string from database
-         * Example: dataProvider.LIST_STRING("select username from User where classID = @param1", new object[] { lbClass.SelectedValue });
+         * Get list from database
+         * Example: dataProvinder.LIST_STRING("select name from Student");
          */
-        public ArrayList LIST_STRING(string query, object[] parameter = null)
+        public ArrayList LIST_STRING(string query)
         {
             SqlConnection con = null;
             SqlCommand cmd = null;
@@ -29,19 +28,6 @@ namespace THAYCACAC
                 con = new SqlConnection(connStr);
                 con.Open();
                 cmd = new SqlCommand(query, con);
-                if (parameter != null)
-                {
-                    string[] listParam = query.Split(' ');
-                    int i = 0;
-                    foreach (string item in listParam)
-                    {
-                        if (item.Contains('@'))
-                        {
-                            cmd.Parameters.AddWithValue(item, parameter[i]);
-                            i++;
-                        }
-                    }
-                }
                 dr = cmd.ExecuteReader();
 
                 while (dr.Read())
@@ -102,7 +88,7 @@ namespace THAYCACAC
 
         /**
          * Get list object
-         * Example: DataTable dataTable = dataProvider.GET_LIST_OBJECT("select * from Ships where name like @param1", new object[] { "%abc%" });
+         * Example: DataTable dataTable = dataProvider.GET_LIST_OBJECT( "select * from Ships where name like @param1", new object[] { "%abc%" });
          */
         public DataTable GET_LIST_OBJECT(string query, object[] parameter = null)
         {
@@ -188,10 +174,9 @@ namespace THAYCACAC
 
         /**
          * Fill data to table
-         * Example: dataProvider.DATA_GRID_VIEW("select * from Student");
+         * Example: dataProvider.GRIDVIEW("select * from Student where class = @param1", GridView1, new object[] { "SE1212" });
          */
-
-        public void DATA_GRID_VIEW(string query, DataGridView dataGridView, object[] parameter = null)
+        public void GRIDVIEW(string query, GridView gridView, object[] parameter = null)
         {
             SqlConnection con = null;
             SqlCommand cmd = null;
@@ -216,7 +201,8 @@ namespace THAYCACAC
                 }
                 SqlDataAdapter adapter = new SqlDataAdapter(cmd);
                 adapter.Fill(dataTable);
-                dataGridView.DataSource = dataTable;
+                gridView.DataSource = dataTable;
+                gridView.DataBind();
             }
             catch (Exception ex)
             {
@@ -230,9 +216,8 @@ namespace THAYCACAC
 
         /**
          * Fill data to listbox
-         * Example: dataProvider.LIST_BOX("select * from [User]", "username", "password", listBoxUser);
+         * Example: dataProvider.LIST_BOX("select * from Student", "name", "id", ListBox1);
          */
-
         public void LIST_BOX(string query, string columnTextField, string columnValueField, ListBox listBox, object[] parameter = null)
         {
             SqlConnection con = null;
@@ -263,9 +248,10 @@ namespace THAYCACAC
                 }
                 SqlDataAdapter adapter = new SqlDataAdapter(cmd);
                 adapter.Fill(dataTable);
-                listBox.DisplayMember = columnTextField;
-                listBox.ValueMember = columnValueField;
                 listBox.DataSource = dataTable;
+                listBox.DataTextField = columnTextField;
+                listBox.DataValueField = columnValueField;
+                listBox.DataBind();
             }
             catch (Exception ex)
             {
@@ -278,58 +264,20 @@ namespace THAYCACAC
         }
 
         /**
-         * Fill data to check list box
-         * Example: dataProvider.CHECKED_LIST_BOX("select username from [User]", checkListBoxUser);
+         * Fill data to check box list
+         * Example: dataProvider.CHECK_BOX_LIST("select * from Student", "name", "id", CheckBoxList1);
          */
-
-        public void CHECKED_LIST_BOX(string query, CheckedListBox checkListBox)
-        {
-            SqlConnection con = null;
-            SqlCommand cmd = null;
-            SqlDataReader dr = null;
-            try
-            {
-                con = new SqlConnection(connStr);
-                con.Open();
-                if (checkListBox.Items.Count > 0)
-                {
-                    checkListBox.Items.Clear();
-                }
-                cmd = new SqlCommand(query, con);
-                dr = cmd.ExecuteReader();
-                while (dr.Read())
-                {
-                    checkListBox.Items.Add(dr[0].ToString());
-                }
-                checkListBox.SetSelected(0, true);
-                checkListBox.SetItemChecked(0, true);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            finally
-            {
-                dr.Close();
-                con.Close();
-            }
-        }
-
-        /**
-         * Fill data to combobox
-         * Example: dataProvider.COMBOBOX("select * from [User]", comboBoxUser, "username", "password");
-         */
-        public void COMBOBOX(string query, string columnTextField, string columnValueField, ComboBox combobox, object[] parameter = null)
+        public void CHECK_BOX_LIST(string query, string columnTextField, string columnValueField, CheckBoxList checkBoxList, object[] parameter = null)
         {
             SqlConnection con = null;
             SqlCommand cmd = null;
             DataTable dataTable = new DataTable();
             try
             {
-                // clear list box
-                if (combobox.Items.Count > 0)
+                // clear check box list
+                if (checkBoxList.Items.Count > 0)
                 {
-                    combobox.Items.Clear();
+                    checkBoxList.Items.Clear();
                 }
                 con = new SqlConnection(connStr);
                 con.Open();
@@ -349,9 +297,157 @@ namespace THAYCACAC
                 }
                 SqlDataAdapter adapter = new SqlDataAdapter(cmd);
                 adapter.Fill(dataTable);
-                combobox.DisplayMember = columnTextField;
-                combobox.ValueMember = columnValueField;
-                combobox.DataSource = dataTable;
+                checkBoxList.DataSource = dataTable;
+                checkBoxList.DataTextField = columnTextField;
+                checkBoxList.DataValueField = columnValueField;
+                checkBoxList.DataBind();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                con.Close();
+            }
+        }
+
+        /**
+         * Fill data to dropdownlist
+         * Example:  dataProvider.DROP_DOWN_LIST("select * from Student", "name", "id", DropDownList1);
+         */
+        public void DROP_DOWN_LIST(string query, string columnTextField, string columnValueField, DropDownList dropDownList, object[] parameter = null)
+        {
+            SqlConnection con = null;
+            SqlCommand cmd = null;
+            DataTable dataTable = new DataTable();
+            try
+            {
+                // clear drop down list
+                if (dropDownList.Items.Count > 0)
+                {
+                    dropDownList.Items.Clear();
+                }
+                con = new SqlConnection(connStr);
+                con.Open();
+                cmd = new SqlCommand(query, con);
+                if (parameter != null)
+                {
+                    string[] listParam = query.Split(' ');
+                    int i = 0;
+                    foreach (string item in listParam)
+                    {
+                        if (item.Contains('@'))
+                        {
+                            cmd.Parameters.AddWithValue(item, parameter[i]);
+                            i++;
+                        }
+                    }
+                }
+                SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                adapter.Fill(dataTable);
+                dropDownList.DataSource = dataTable;
+                dropDownList.DataTextField = columnTextField;
+                dropDownList.DataValueField = columnValueField;
+                dropDownList.DataBind();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                con.Close();
+            }
+        }
+
+        /**
+         * Fill data to bulleted list
+         * Example:  dataProvider.BULLETED_LIST("select * from Student", "name", "id", BulletedList1);
+         */
+        public void BULLETED_LIST(string query, string columnTextField, string columnValueField, BulletedList bulletedList, object[] parameter = null)
+        {
+            SqlConnection con = null;
+            SqlCommand cmd = null;
+            DataTable dataTable = new DataTable();
+            try
+            {
+                // clear drop down list
+                if (bulletedList.Items.Count > 0)
+                {
+                    bulletedList.Items.Clear();
+                }
+                con = new SqlConnection(connStr);
+                con.Open();
+                cmd = new SqlCommand(query, con);
+                if (parameter != null)
+                {
+                    string[] listParam = query.Split(' ');
+                    int i = 0;
+                    foreach (string item in listParam)
+                    {
+                        if (item.Contains('@'))
+                        {
+                            cmd.Parameters.AddWithValue(item, parameter[i]);
+                            i++;
+                        }
+                    }
+                }
+                SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                adapter.Fill(dataTable);
+                bulletedList.DataSource = dataTable;
+                bulletedList.DataTextField = columnTextField;
+                bulletedList.DataValueField = columnValueField;
+                bulletedList.DataBind();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                con.Close();
+            }
+        }
+
+        /**
+         * Fill data to radio button list
+         * Example:  dataProvider.RADIO_BUTTON_LIST("select * from Student", "name", "id", RadioButtonList1);
+         */
+        public void RADIO_BUTTON_LIST(string query, string columnTextField, string columnValueField, RadioButtonList radioButtonList, object[] parameter = null)
+        {
+            SqlConnection con = null;
+            SqlCommand cmd = null;
+            DataTable dataTable = new DataTable();
+            try
+            {
+                // clear drop down list
+                if (radioButtonList.Items.Count > 0)
+                {
+                    radioButtonList.Items.Clear();
+                }
+                con = new SqlConnection(connStr);
+                con.Open();
+                cmd = new SqlCommand(query, con);
+                if (parameter != null)
+                {
+                    string[] listParam = query.Split(' ');
+                    int i = 0;
+                    foreach (string item in listParam)
+                    {
+                        if (item.Contains('@'))
+                        {
+                            cmd.Parameters.AddWithValue(item, parameter[i]);
+                            i++;
+                        }
+                    }
+                }
+                SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                adapter.Fill(dataTable);
+                radioButtonList.DataSource = dataTable;
+                radioButtonList.DataTextField = columnTextField;
+                radioButtonList.DataValueField = columnValueField;
+                radioButtonList.DataBind();
             }
             catch (Exception ex)
             {

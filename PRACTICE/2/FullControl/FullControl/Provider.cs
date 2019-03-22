@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace THAYCACAC
+namespace FullControl
 {
     class DataProvider
     {
@@ -16,9 +16,8 @@ namespace THAYCACAC
 
         /**
          * Get list string from database
-         * Example: dataProvider.LIST_STRING("select username from User where classID = @param1", new object[] { lbClass.SelectedValue });
          */
-        public ArrayList LIST_STRING(string query, object[] parameter = null)
+        public ArrayList LIST_STRING(string query)
         {
             SqlConnection con = null;
             SqlCommand cmd = null;
@@ -29,19 +28,6 @@ namespace THAYCACAC
                 con = new SqlConnection(connStr);
                 con.Open();
                 cmd = new SqlCommand(query, con);
-                if (parameter != null)
-                {
-                    string[] listParam = query.Split(' ');
-                    int i = 0;
-                    foreach (string item in listParam)
-                    {
-                        if (item.Contains('@'))
-                        {
-                            cmd.Parameters.AddWithValue(item, parameter[i]);
-                            i++;
-                        }
-                    }
-                }
                 dr = cmd.ExecuteReader();
 
                 while (dr.Read())
