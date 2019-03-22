@@ -11,7 +11,7 @@ DELETE FROM CourseRegistration WHERE StudentID = 1;
 UPDATE member SET lastname = 'Hoa', firstname = 'Pham Ngoc', middleinitial = ''
 street = '', city = '', state_prov = '', country = '', mail_code = '', phone_no = '',
 photograph = NULL, issue_dt = (dateadd(year,(-1),getdate() + 1)),
-expr_dt = GETDATE(), region_no = 5, corp_no = NULL, prev_balance = NULL, curr_balance = NULL
+expr_dt = GETDATE(), region_no = 1, corp_no = 1, prev_balance = NULL, curr_balance = NULL
 WHERE member_no = 1
 
 UPDATE region SET region_name = '', street = '', city = '', state_prov = '',
@@ -34,23 +34,7 @@ INSERT INTO member (lastname, firstname, middleinitial, street, city,
     state_prov, country, mail_code, phone_no, photograph,
     issue_dt, expr_dt, region_no, corp_no, prev_balance, curr_balance)
 VALUES
-(   'Hoa',      -- lastname: varchar(15)
-    'Pham Ngoc',      -- firstname: varchar(15)
-    '',      -- middleinitial: char(1)
-    '',      -- street: varchar(15)
-    '',      -- city: varchar(15)
-    '',      -- state_prov: char(2)
-    '',      -- country: char(2)
-    '',      -- mail_code: char(10)
-    '',      -- phone_no: char(13)
-    NULL,      -- photograph: image
-    (dateadd(year,(-1),getdate() + 1)), -- issue_dt: datetime
-    GETDATE(), -- expr_dt: datetime
-    1,      -- region_no: int
-    1,      -- corp_no: int
-    NULL,      -- prev_balance: money
-    NULL       -- curr_balance: money
-)
+('Hoa','Pham Ngoc', '', '', '', '', '', '', '', NULL, (dateadd(year,(-1),getdate() + 1)), GETDATE(), 1, 1, NULL, NULL)
 
 INSERT INTO region (region_name, street, city,
     state_prov, country, mail_code, phone_no, region_code)
