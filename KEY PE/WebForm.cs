@@ -35,3 +35,13 @@ TextBox4.Text = Request.QueryString["mname"].ToString();
         tbProjectName.Text = e.CommandArgument.ToString();
     }
 }
+
+/**
+ * Paging
+ */
+
+ protected void GridView1_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+            GridView1.PageIndex = e.NewPageIndex;
+            // load table
+        }

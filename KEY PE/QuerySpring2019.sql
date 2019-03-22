@@ -46,8 +46,8 @@ VALUES
     NULL,      -- photograph: image
     (dateadd(year,(-1),getdate() + 1)), -- issue_dt: datetime
     GETDATE(), -- expr_dt: datetime
-    5,      -- region_no: int
-    NULL,      -- corp_no: int
+    1,      -- region_no: int
+    1,      -- corp_no: int
     NULL,      -- prev_balance: money
     NULL       -- curr_balance: money
 )
@@ -100,3 +100,9 @@ VALUES
     GETDATE(), -- Date: date
     0.0        -- Mark: float
 )
+
+-- SELECT 
+
+SELECT member.lastname, member.phone_no, corporation.corp_name, region.region_name
+FROM member INNER JOIN corporation ON member.corp_no = corporation.corp_no
+INNER JOIN region ON member.region_no = region.region_no
