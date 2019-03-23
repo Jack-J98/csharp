@@ -49,6 +49,7 @@ namespace Q2
 
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
+            dataGridView1.Rows[e.RowIndex].Selected = true;
             // check edit, delete
             if (string.Equals(dataGridView1.Columns[e.ColumnIndex].Name, "checkEdit"))
             {
@@ -65,6 +66,14 @@ namespace Q2
                 dataProvider.ADD_UPDATE_DELETE("DELETE FROM member WHERE member_no = @para1", new object[] { idMember });
                 MessageBox.Show("Delete successful!!!", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 loadData();
+            }
+            else
+            {
+                DataGridViewRow dr = dataGridView1.Rows[e.RowIndex];
+                tbFirstName.DataBindings.Clear();
+                tbLastName.DataBindings.Clear();
+                tbFirstName.DataBindings.Add("Text", dataGridView1.DataSource, "firstname");
+                tbLastName.DataBindings.Add("Text", dataGridView1.DataSource, "lastname");
             }
         }
 
